@@ -3,6 +3,7 @@ package com.comp586server.controller;
 import com.comp586server.domain.Author;
 import com.comp586server.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,7 @@ public class AuthorController {
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
+    @PreAuthorize("hasAuthority('admin')")
     @RequestMapping("/getAuthor")
     public Author getAuthor(@RequestParam String id) {
         try{
@@ -34,6 +36,8 @@ public class AuthorController {
         return null;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PreAuthorize("hasAuthority('admin')")
     @RequestMapping("/getAllAuthors")
     public Iterable<Author> getAllAuthors() {
         return repository.findAll();

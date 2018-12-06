@@ -1,24 +1,43 @@
 package com.comp586server;
 
-import com.comp586server.domain.Author;
-import com.comp586server.domain.Book;
 import com.comp586server.repository.AuthorRepository;
 import com.comp586server.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.Collections;
 
+@EnableResourceServer
 @SpringBootApplication
 public class Comp586serverApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Comp586serverApplication.class, args);
+	}
+
+	@Bean
+	@SuppressWarnings("unchecked")
+	public FilterRegistrationBean simpleCorsFilter() {
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);
+		config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+		config.setAllowedMethods(Collections.singletonList("*"));
+		config.setAllowedHeaders(Collections.singletonList("*"));
+		source.registerCorsConfiguration("/**", config);
+		FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+		bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+		return bean;
 	}
 
 	@Autowired
@@ -29,32 +48,50 @@ public class Comp586serverApplication implements CommandLineRunner {
 	@Override
 	@Transactional
 	public void run(String... args) throws Exception {
-		Optional<Author> byId = authorRepository.findById(1);
-		Author author = byId.get();
-		System.out.println("cool");
 
-		Optional<Book> byId1 = bookRepository.findById(1);
-		Book book = byId1.get();
-		System.out.println("HELP");
+//		Author author = new Author();
+//		author.setName("George Orwell");
+//
+//
 //		Set<Book> bookSet = new HashSet<>();
 //
 //		Book book = new Book();
-//		book.setName("Romeo and Juliet");
+//		book.setName("1984");
 //		book.setAuthor(author);
 //		bookSet.add(book);
 //
 //		book = new Book();
-//		book.setName("Hamlet");
+//		book.setName("Harry Potter and the Chamber of Secrets");
 //		book.setAuthor(author);
 //		bookSet.add(book);
 //
 //		book = new Book();
-//		book.setName("Macbeth");
+//		book.setName("Harry Potter and the Prisoner of Azkaban");
 //		book.setAuthor(author);
 //		bookSet.add(book);
 //
+//		book = new Book();
+//		book.setName("Harry Potter and the Half-Blood Prince");
+//		book.setAuthor(author);
+//		bookSet.add(book);
+//
+//		book = new Book();
+//		book.setName("Harry Potter and the Order of the Phoenix");
+//		book.setAuthor(author);
+//		bookSet.add(book);
+//
+//		book = new Book();
+//		book.setName("Harry Potter and the Goblet of Fire");
+//		book.setAuthor(author);
+//		bookSet.add(book);
+//
+//		book = new Book();
+//		book.setName("Harry Potter and the Deathly Hallows");
+//		book.setAuthor(author);
+//		bookSet.add(book);
+
 //		author.setBooks(bookSet);
-//
+
 //		authorRepository.save(author);
 //		bookRepository.saveAll(bookSet);
 	}
